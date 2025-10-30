@@ -1,11 +1,30 @@
 import requests
-import statistics
 from collections import Counter
 from typing import List, Dict, Any
 from models.user_model import User
 from utils.logger import setup_logger
 
 logger = setup_logger(__name__)
+
+def _mean(data: list) -> float:
+    return sum(data) / len(data) if data else 0.0
+
+def _median(data: list) -> float:
+    n = len(data)
+    if n == 0:
+        return 0.0
+    sorted_data = sorted(data)
+    mid = n // 2
+    if n % 2 == 0:
+        return (sorted_data[mid-1] + sorted_data[mid]) / 2
+    return sorted_data[mid]
+
+def _pstdev(data: list) -> float:
+    n = len(data)
+    if n == 0:
+        return 0.0
+    mu = _mean(data)
+    return (sum((x - mu) ** 2 for x in data) / n) ** 0.5
 
 class ETLService:
     """Servicio ETL: extracción y transformación básica de usuarios."""
@@ -49,11 +68,11 @@ class ETLService:
 
         stats = {
             "total_users": len(users),
-            "avg_age": round(statistics.mean(ages), 2),
-            "median_age": round(statistics.median(ages), 2),
-            "std_age": round(statistics.pstdev(ages), 2),
-            "min_age": min(ages),
-            "max_age": max(ages),
+            "avg_age": round(_mean(ages), 2),
+            "median_age": round(_median(ages), 2),
+            "std_age": round(_pstdev(ages), 2),
+            "min_age": min(ages) if ages else 0,
+            "max_age": max(ages) if ages else 0,
             "gender_distribution": dict(Counter(genders)),
             "top_countries": Counter(countries).most_common(10),
         }
