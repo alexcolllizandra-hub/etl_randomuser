@@ -8,6 +8,38 @@ Proceso ETL (Extract, Transform, Load) en Python usando la API pública [RandomU
 
 ---
 
+## 📥 Guía
+
+Repositorio: [alexcolllizandra-hub/etl_randomuser](https://github.com/alexcolllizandra-hub/etl_randomuser.git)
+
+### 1. Clona el repositorio
+
+```bash
+git clone https://github.com/alexcolllizandra-hub/etl_randomuser.git
+cd etl_randomuser
+```
+
+### 2. Ábrelo en PyCharm
+
+- Ve a PyCharm → `Open` → selecciona la carpeta `etl_randomuser`.
+- Acepta crear el entorno virtual si te lo pregunta (recomendado).
+
+### 3. Instala las dependencias
+
+- Abre una terminal (en PyCharm o en la carpeta del proyecto):
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Ejecuta el ETL
+
+```bash
+python src/main.py
+```
+
+---
+
 ## 📦 Estructura del proyecto
 
 ```
@@ -23,22 +55,6 @@ etl_project/
 ├── data/
 ├── requirements.txt
 └── README.md
-```
-
----
-
-## ⚡ Uso Rápido
-
-Instala dependencias:
-
-```bash
-pip install -r requirements.txt
-```
-
-Ejecuta el ETL:
-
-```bash
-python src/main.py
 ```
 
 ---
@@ -60,11 +76,14 @@ Con mensajes tipo:
 
 ---
 
-## ✨ Notas
+## ✨ Notas y recomendaciones
 
 - El directorio `data/` contiene los resultados del proceso.
 - La API RandomUser no requiere registro.
+- Puedes usar cualquier editor: VSCode, PyCharm, etc.
+- Puedes modificar las rutas de salida si lo necesitas.
 - 100% Python puro, modular y fácil de ampliar.
 
 ---
 
+Hecho con ❤️ y Python.
