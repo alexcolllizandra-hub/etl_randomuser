@@ -6,12 +6,82 @@ Este repositorio despliega paso a paso un **proceso ETL** (Extracción, Transfor
 
 ---
 
+## ❌ ¿Por qué NO se usan pandas, numpy ni statistics?
+
+En este proyecto **NO se utilizan librerías avanzadas de análisis de datos como `pandas`, `numpy` ni siquiera la estándar `statistics`** para los cálculos matemáticos. Todos los cálculos y transformaciones (media, mediana, desviación estándar, percentiles) **se realizan "a mano", usando solo código Python básico**.
+
+**¿Por qué este enfoque?**
+- **Didáctico**: Obliga a entender realmente cada paso de la lógica ETL, ideal si eres principiante.
+- **Transparencia total**: Puedes ver cómo se calcula cada estadística y transformar los datos línea a línea.
+- **Portabilidad**: El código es portable y entendible incluso si alguna librería avanzada no está disponible.
+
+**Ejemplo de cálculo manual en este proyecto:**
+```python
+# Cálculo manual de la media:
+def _mean(data):
+    return sum(data) / len(data) if data else 0.0
+# Mediana, desviación estándar, percentiles... también están hechos así.
+```
+
+Puedes abrir los archivos `src/services/etl_service.py` y `src/services/transformer_service.py` para ver todos los cálculos hechos a "mano".
+
+---
+
 ## 💡 ¿Qué hace exactamente este ETL?
 
-- **Extract (Extracción):** Descarga cientos o miles de perfiles aleatorios (ficticios) usando la API RandomUser.
-- **Transform (Transformación):** Limpia, filtra y enriquece los datos (por ejemplo: calcula grupos de edad, detecta outliers, obtiene información del país desde otra API, etc.).
-- **Load (Carga):** Almacena el resultado en CSV y en una base de datos SQLite para consumir con cualquier herramienta.
-- **Visualización:** Genera gráficos automáticos (edades, géneros, países top, etc.) como complemento analítico.
+- **Extract (Extracción):** Descarga cientos o miles de perfiles aleatorios (ficticios) usando la API RandomUser. El proceso de descarga es paginado, para mejorar el rendimiento.
+- **Transform (Transformación):**
+  - Limpia los datos: filtra y elimina usuarios incompletos o incorrectos (sin email, sin país, edad inválida).
+  - Calcula estadísticas básicas:** media/mediana/desviación estándar de la edad, distribución de género y país.
+  - Aplica transformaciones avanzadas: 
+    - Agrupa edades manualmente en rangos.
+    - Detecta outliers sin ninguna librería de data science (utiliza el método estadístico IQR directamente implementado).
+    - Enriquecimiento: consulta a otra API pública (RestCountries) para añadir información extra del país (población y región).
+- **Load (Carga):**
+  - Almacena el resultado como CSV y como base de datos SQLite, usando módulos propios muy sencillos.
+- **Visualización:**
+  - Genera gráficos automáticos (edades, géneros, países top, etc.) usando sólo `matplotlib` y `seaborn` (librerías populares para graficar en Python).
+
+---
+
+## 🧩 Explicación detallada de cada módulo y capa
+
+**Todo el flujo está dividido en módulos fáciles de seguir.** Aquí tienes para principiantes cómo se "comunican":
+
+- **main.py**: Es el "director de orquesta", ejecuta los pasos del proceso llamando a un "controlador".
+- **controller/etl_controller.py**: Organiza y coordina todo el flujo ETL, de principio a fin. Su función clave es `run()`:
+  1. Llama a la **extracción** (ETLService)
+  2. Llama a la **limpieza** (ETLService)
+  3. Obtiene estadísticas básicas (ETLService)
+  4. Aplica transformaciones avanzadas (TransformerService)
+  5. Llama a los cargadores (**loaders**) para guardar los datos en CSV y SQLite
+  6. Ejecuta el módulo de **visualizaciones**
+- **services/etl_service.py**: Hace la extracción (descarga desde la API), limpieza y estadísticas básicas (todo a mano).
+- **services/transformer_service.py**: Aplica transformaciones más complejas (enriquecimiento, outlier, agrupaciones, percentiles) manualmente.
+- **services/visualization_service.py**: Usa los datos para crear gráficos (distribución de edad, género, países...)
+- **models/user_model.py**: Define cómo es cada usuario en Python (estructura de datos, usando un "dataclass").
+- **loaders/csv_loader.py**/**sql_loader.py**: Guardan la información en archivos de la carpeta `data/`, cada uno en su formato.
+- **utils/logger.py**: Solo para mejorar lo que ves por consola, para que entiendas en qué paso está el proceso.
+
+---
+
+### Ejemplo paso a paso (flujo de datos entre capas)
+
+1. **main.py** → llama a `ETLController.run()`
+2. **Extracción:**
+   - Se descargan usuarios [ETLService.extract_users()]
+3. **Limpieza:**
+   - Se eliminan usuarios sin datos clave [ETLService.clean_users()]
+4. **Transformación básica:**
+   - Se calculan estadísticas manualmente (media, mediana, etc.) sin pandas/numPy/statistics
+5. **Transformación avanzada:**
+   - Se asignan grupos de edad manualmente, se detectan "outliers", se enriquece con datos externos usando otra API. Todo sin librerías externas de análisis.
+6. **Carga:**
+   - Los datos limpios y enriquecidos se escriben a disco en archivos CSV y base de datos SQLite (cada usuario es un registro)
+7. **Visualización:**
+   - Se generan los gráficos usando los datos ya preparados.
+
+**En cada paso puedes seguir los datos y ver exactamente qué ocurre y cómo se implementa.**
 
 ---
 
