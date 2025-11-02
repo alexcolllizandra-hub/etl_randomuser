@@ -100,7 +100,7 @@ class TransformerService:
             try:
                 resp = requests.get(
                     f"https://restcountries.com/v3.1/name/{country}?fields=name,region,population",
-                    timeout=10
+                    timeout=30
                 )
                 if resp.status_code == 200:
                     info = resp.json()[0]

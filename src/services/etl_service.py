@@ -60,7 +60,7 @@ class ETLService:
                 url += f"&seed={seed}"
                 
             try:
-                response = requests.get(url, timeout=10)
+                response = requests.get(url, timeout=30)
                 response.raise_for_status()
                 data = response.json().get("results", [])
                 users.extend([User.from_api(u) for u in data])
