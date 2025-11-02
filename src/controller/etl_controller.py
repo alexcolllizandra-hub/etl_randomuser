@@ -19,11 +19,11 @@ class ETLController:
         os.makedirs(self.plots_dir, exist_ok=True)
         self.visualizer = VisualizationService(output_dir=self.plots_dir)
 
-    def run(self, n_users: int = 1000):
+    def run(self, n_users: int = 1000, seed: str = None):
         logger.info("=== Iniciando proceso ETL extendido ===")
 
         # 1. Extracción y limpieza
-        users = self.etl_service.extract_users(n_users)
+        users = self.etl_service.extract_users(n_users, seed=seed)
         users = self.etl_service.clean_users(users)
 
         # 2. Transformación inicial básica

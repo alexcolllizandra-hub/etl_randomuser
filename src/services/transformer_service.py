@@ -1,5 +1,4 @@
 import requests
-import statistics
 from collections import Counter
 from src.models.user_model import User
 from src.utils.logger import setup_logger
@@ -64,6 +63,10 @@ class TransformerService:
     def detect_outliers(self):
         """Detecta valores atípicos (outliers) de edad usando el método IQR."""
         ages = [u.age for u in self.users]
+        if not ages:
+            logger.warning("No hay datos para detectar outliers.")
+            return
+            
         q1, q3 = self._percentiles(ages, 25), self._percentiles(ages, 75)
         iqr = q3 - q1
         lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr
@@ -76,11 +79,13 @@ class TransformerService:
 
     def _percentiles(self, data: list, percent: float) -> float:
         """Calcula percentiles sin usar numpy."""
+        if not data:
+            return 0.0
         data_sorted = sorted(data)
         k = (len(data_sorted) - 1) * (percent / 100)
         f, c = int(k), min(int(k) + 1, len(data_sorted) - 1)
         if f == c:
-            return data_sorted[int(k)]
+            return data_sorted[int(k)] if int(k) < len(data_sorted) else data_sorted[-1]
         return data_sorted[f] + (data_sorted[c] - data_sorted[f]) * (k - f)
 
     # ----------------------------

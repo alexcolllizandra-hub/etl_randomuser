@@ -29,19 +29,36 @@ def _pstdev(data: list) -> float:
 class ETLService:
     """Servicio ETL: extracción y transformación básica de usuarios."""
 
-    def extract_users(self, n: int = 1000) -> List[User]:
+    def extract_users(self, n: int = 1000, seed: str = None) -> List[User]:
         """
-        Extrae usuarios desde la API RandomUser con soporte para paginación.
-        Puede solicitar hasta miles de registros dividiéndolos en lotes.
+        Extrae usuarios desde la API RandomUser con soporte para paginación y seed.
+        
+        Args:
+            n: Número de usuarios a extraer (por defecto 1000)
+            seed: Semilla opcional para reproducibilidad. Si se proporciona,
+                  la API devolverá siempre los mismos usuarios para ese seed.
+                  
+        Returns:
+            Lista de objetos User con los datos extraídos.
+            
+        Nota sobre Seed:
+            - Sin seed: Cada ejecución devuelve usuarios completamente aleatorios diferentes
+            - Con seed: Garantiza reproducibilidad - los mismos datos cada vez
+            - Ejemplo: seed="abc123" siempre devuelve la misma secuencia de usuarios
         """
         users = []
         batch_size = 500
         pages = n // batch_size + (1 if n % batch_size else 0)
 
-        logger.info(f"Iniciando extracción de {n} usuarios en {pages} páginas...")
+        seed_msg = f" con seed='{seed}'" if seed else ""
+        logger.info(f"Iniciando extracción de {n} usuarios en {pages} páginas{seed_msg}...")
 
         for i in range(1, pages + 1):
+            # Construir URL con paginación y seed opcional
             url = f"https://randomuser.me/api/?results={batch_size}&page={i}"
+            if seed:
+                url += f"&seed={seed}"
+                
             try:
                 response = requests.get(url, timeout=10)
                 response.raise_for_status()
