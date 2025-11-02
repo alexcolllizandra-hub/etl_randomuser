@@ -1,8 +1,8 @@
 import sqlite3
 import os
 from typing import List, Dict, Any
-from loaders.base_loader import BaseLoader
-from utils.logger import setup_logger
+from src.loaders.base_loader import BaseLoader
+from src.utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -14,7 +14,7 @@ class SQLLoader(BaseLoader):
 
     def load(self, data: List[Dict[str, Any]], output_dir: str) -> None:
         if not data:
-            logger.warning("⚠️ No hay datos para exportar en SQL.")
+            logger.warning("No hay datos para exportar en SQL.")
             return
 
         os.makedirs(output_dir, exist_ok=True)
@@ -48,4 +48,4 @@ class SQLLoader(BaseLoader):
 
         conn.commit()
         conn.close()
-        logger.info(f"✅ Datos insertados correctamente en {db_path}")
+        logger.info(f"Datos insertados correctamente en {db_path}")

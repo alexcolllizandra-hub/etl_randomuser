@@ -1,0 +1,74 @@
+# Entornos virtuales
+venv/
+env/
+ENV/
+Lib/
+Scripts/
+share/
+pyvenv.cfg
+.venv
+env.bak/
+venv.bak/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Datos y logs generados
+data/*.csv
+data/*.db
+logs/
+*.log
+
+# Archivos de configuración IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Entornos virtuales y paquetes
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Archivos del sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Distribución y build
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Scripts de ejecución (los excluiremos porque cada desarrollador puede tener su propia configuración)
+# Pero mantenemos los que son estándar del proyecto
+!run_etl.bat
+!run_etl.sh
+
+# Guías (mantener)
+!GUIA_VIRTUALIZACION.md

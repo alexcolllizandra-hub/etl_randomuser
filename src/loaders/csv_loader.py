@@ -1,8 +1,8 @@
 import csv
 import os
 from typing import List, Dict, Any
-from loaders.base_loader import BaseLoader
-from utils.logger import setup_logger
+from src.loaders.base_loader import BaseLoader
+from src.utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -14,7 +14,7 @@ class CSVLoader(BaseLoader):
 
     def load(self, data: List[Dict[str, Any]], output_dir: str) -> None:
         if not data:
-            logger.warning("⚠️ No hay datos para exportar en CSV.")
+            logger.warning("No hay datos para exportar en CSV.")
             return
 
         os.makedirs(output_dir, exist_ok=True)
@@ -25,4 +25,4 @@ class CSVLoader(BaseLoader):
             writer.writeheader()
             writer.writerows(data)
 
-        logger.info(f"✅ Datos guardados correctamente en {filepath}")
+        logger.info(f"Datos guardados correctamente en {filepath}")

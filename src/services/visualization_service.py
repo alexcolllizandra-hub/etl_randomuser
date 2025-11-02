@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from models.user_model import User
+from src.models.user_model import User
 
 plt.style.use("ggplot")
 

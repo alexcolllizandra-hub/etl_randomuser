@@ -1,8 +1,8 @@
 import requests
 import statistics
 from collections import Counter
-from models.user_model import User
-from utils.logger import setup_logger
+from src.models.user_model import User
+from src.utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 

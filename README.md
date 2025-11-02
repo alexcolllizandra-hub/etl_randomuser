@@ -131,9 +131,27 @@ cd etl_randomuser
 ### 🚀 Ejecuta el pipeline ETL
 
 Desde la terminal, estando en la raíz del proyecto:
+
+**En Windows:**
 ```bash
-python src/main.py
+.\run_etl.bat
 ```
+
+**En Linux/Mac:**
+```bash
+chmod +x run_etl.sh
+./run_etl.sh
+```
+
+**Alternativa (funciona en todos los sistemas):**
+```bash
+# Windows PowerShell:
+$env:PYTHONPATH="."; python src\main.py
+
+# Linux/Mac:
+PYTHONPATH=$(pwd) python src/main.py
+```
+
 Por defecto, descarga y procesa 100 usuarios (puedes ajustar el número modificando `main.py` o el parámetro en `ETLController.run()`).
 
 ---
@@ -162,6 +180,8 @@ etl_randomuser/
 ├── data/         # Aquí se almacenan los resultados: CSV y DB
 ├── logs/         # (opcional) Aquí se ubican los logs detallados si los configuras
 ├── requirements.txt # Dependencias Python necesarias
+├── run_etl.bat   # Script de ejecución para Windows
+├── run_etl.sh    # Script de ejecución para Linux/Mac
 └── README.md
 ```
 
@@ -209,5 +229,14 @@ Extiende `user_model.py` (añade nuevos atributos al dataclass) y ajusta las tra
 
 **¿Y si quiero guardar en otro formato?**
 Añade un nuevo loader en la carpeta `loaders/`.
+
+**Error "ModuleNotFoundError: No module named 'services'"?**
+Si ejecutas desde PyCharm funciona pero desde terminal falla, es un problema de PYTHONPATH. Usa los scripts `run_etl.bat` (Windows) o `run_etl.sh` (Linux/Mac), o ejecuta manualmente con:
+```bash
+# Windows:
+$env:PYTHONPATH="."; python src\main.py
+# Linux/Mac:
+PYTHONPATH=$(pwd) python src/main.py
+```
 
 ---
