@@ -50,6 +50,7 @@ class ETLController:
         self.visualizer.plot_age_distribution(users)
         self.visualizer.plot_gender_distribution(users)
         self.visualizer.plot_top_countries(users)
-        # Los métodos de visualización que usan DataFrame se pueden adaptar si lo necesitas
+        self.visualizer.plot_age_by_country(users)
+        self.visualizer.plot_correlation_matrix(users)
 
         logger.info("=== Proceso ETL completado con éxito ===")

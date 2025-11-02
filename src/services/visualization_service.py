@@ -24,8 +24,8 @@ class VisualizationService:
         plt.tight_layout()
         filepath = os.path.join(self.output_dir, "distribucion_edades.png")
         plt.savefig(filepath, dpi=300, bbox_inches='tight')
-        plt.close()
         print(f"Gráfico guardado en: {filepath}")
+        plt.show()
 
     def plot_gender_distribution(self, users: list[User]) -> None:
         df = pd.DataFrame([u.__dict__ for u in users])
@@ -37,8 +37,8 @@ class VisualizationService:
         plt.tight_layout()
         filepath = os.path.join(self.output_dir, "distribucion_genero.png")
         plt.savefig(filepath, dpi=300, bbox_inches='tight')
-        plt.close()
         print(f"Gráfico guardado en: {filepath}")
+        plt.show()
 
     def plot_top_countries(self, users: list[User], top_n: int = 10) -> None:
         df = pd.DataFrame([u.__dict__ for u in users])
@@ -51,28 +51,34 @@ class VisualizationService:
         plt.tight_layout()
         filepath = os.path.join(self.output_dir, "top_paises.png")
         plt.savefig(filepath, dpi=300, bbox_inches='tight')
-        plt.close()
         print(f"Gráfico guardado en: {filepath}")
+        plt.show()
 
-    @staticmethod
-    def plot_age_by_country(df: pd.DataFrame, top_n: int = 6):
+    def plot_age_by_country(self, users: list[User], top_n: int = 6):
         """Muestra la distribución de edad por país con boxplots."""
+        df = pd.DataFrame([u.__dict__ for u in users])
         top = df["country"].value_counts().nlargest(top_n).index
         subset = df[df["country"].isin(top)]
         plt.figure(figsize=(10, 6))
-        sns.boxplot(data=subset, x="country", y="age", palette="Pastel1")
+        sns.boxplot(data=subset, x="country", y="age", hue="country", palette="Pastel1", legend=False)
         plt.title(f"Distribución de Edad por País (Top {top_n})")
         plt.xticks(rotation=45)
         plt.tight_layout()
+        filepath = os.path.join(self.output_dir, "edad_por_pais.png")
+        plt.savefig(filepath, dpi=300, bbox_inches='tight')
+        print(f"Gráfico guardado en: {filepath}")
         plt.show()
 
-    @staticmethod
-    def plot_correlation_matrix(df: pd.DataFrame):
+    def plot_correlation_matrix(self, users: list[User]):
         """Matriz de correlación entre variables numéricas."""
+        df = pd.DataFrame([u.__dict__ for u in users])
         numeric_cols = df.select_dtypes(include=["int", "float"])
         corr = numeric_cols.corr()
         plt.figure(figsize=(6, 5))
         sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f")
         plt.title("Matriz de Correlación")
         plt.tight_layout()
+        filepath = os.path.join(self.output_dir, "matriz_correlacion.png")
+        plt.savefig(filepath, dpi=300, bbox_inches='tight')
+        print(f"Gráfico guardado en: {filepath}")
         plt.show()
