@@ -15,6 +15,9 @@ class VisualizationService:
         os.makedirs(self.output_dir, exist_ok=True)
 
     def plot_age_distribution(self, users: list[User]) -> None:
+        if not users:
+            print("No hay datos para generar gráfico de distribución de edades.")
+            return
         df = pd.DataFrame([u.__dict__ for u in users])
         plt.figure(figsize=(8, 5))
         sns.histplot(df["age"], bins=15, kde=True, color="#1f77b4")
@@ -28,6 +31,9 @@ class VisualizationService:
         plt.show()
 
     def plot_gender_distribution(self, users: list[User]) -> None:
+        if not users:
+            print("No hay datos para generar gráfico de distribución por género.")
+            return
         df = pd.DataFrame([u.__dict__ for u in users])
         plt.figure(figsize=(6, 4))
         sns.countplot(x="gender", data=df, hue="gender", palette="Set2", legend=False)
@@ -41,6 +47,9 @@ class VisualizationService:
         plt.show()
 
     def plot_top_countries(self, users: list[User], top_n: int = 10) -> None:
+        if not users:
+            print("No hay datos para generar gráfico de países.")
+            return
         df = pd.DataFrame([u.__dict__ for u in users])
         top_countries = df["country"].value_counts().head(top_n)
         plt.figure(figsize=(9, 6))
@@ -56,6 +65,9 @@ class VisualizationService:
 
     def plot_age_by_country(self, users: list[User], top_n: int = 6):
         """Muestra la distribución de edad por país con boxplots."""
+        if not users:
+            print("No hay datos para generar gráfico de edad por país.")
+            return
         df = pd.DataFrame([u.__dict__ for u in users])
         top = df["country"].value_counts().nlargest(top_n).index
         subset = df[df["country"].isin(top)]
@@ -71,8 +83,14 @@ class VisualizationService:
 
     def plot_correlation_matrix(self, users: list[User]):
         """Matriz de correlación entre variables numéricas."""
+        if not users:
+            print("No hay datos para generar matriz de correlación.")
+            return
         df = pd.DataFrame([u.__dict__ for u in users])
         numeric_cols = df.select_dtypes(include=["int", "float"])
+        if numeric_cols.empty:
+            print("No hay variables numéricas para correlación.")
+            return
         corr = numeric_cols.corr()
         plt.figure(figsize=(6, 5))
         sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f")
