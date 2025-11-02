@@ -13,9 +13,11 @@ class ETLController:
 
     def __init__(self):
         self.etl_service = ETLService()
-        self.visualizer = VisualizationService()
         self.output_dir = os.path.join(os.path.dirname(__file__), "../../data")
+        self.plots_dir = os.path.join(os.path.dirname(__file__), "../../plots")
         os.makedirs(self.output_dir, exist_ok=True)
+        os.makedirs(self.plots_dir, exist_ok=True)
+        self.visualizer = VisualizationService(output_dir=self.plots_dir)
 
     def run(self, n_users: int = 1000):
         logger.info("=== Iniciando proceso ETL extendido ===")

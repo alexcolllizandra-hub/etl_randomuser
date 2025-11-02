@@ -22,6 +22,10 @@ data/*.csv
 data/*.db
 logs/
 *.log
+plots/*.png
+plots/*.jpg
+plots/*.pdf
+plots/*.svg
 
 # Archivos de configuración IDE
 .idea/
