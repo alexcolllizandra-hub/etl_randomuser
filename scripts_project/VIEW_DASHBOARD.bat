@@ -6,8 +6,12 @@ echo ACTIVANDO DASHBOARD ETL
 echo ============================================================
 echo.
 
+REM Configurar PYTHONPATH
+set PYTHONPATH=%cd%\..
+
 REM Ejecutar el servidor
-python serve_dashboard.py
+cd ..
+python scripts_project\serve_dashboard.py
 
 pause
 

@@ -2,6 +2,10 @@
 # Script para ejecutar el ETL en Linux/Mac
 # Configura PYTHONPATH y ejecuta el proyecto
 
-export PYTHONPATH=$(pwd)
-python src/main.py
+# Configurar PYTHONPATH
+export PYTHONPATH=$(cd .. && pwd)
+
+# Ejecutar el ETL
+cd ..
+python3 -m src.main
 

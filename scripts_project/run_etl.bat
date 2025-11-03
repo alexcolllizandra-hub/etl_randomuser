@@ -2,6 +2,10 @@
 REM Script para ejecutar el ETL en Windows
 REM Configura PYTHONPATH y ejecuta el proyecto
 
-set PYTHONPATH=%cd%
-python src\main.py
+REM Configurar PYTHONPATH
+set PYTHONPATH=%cd%\..
+
+REM Ejecutar el ETL
+cd ..
+python -m src.main
 

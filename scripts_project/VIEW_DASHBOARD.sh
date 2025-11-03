@@ -6,6 +6,10 @@ echo "ACTIVANDO DASHBOARD ETL"
 echo "============================================================"
 echo ""
 
+# Configurar PYTHONPATH
+export PYTHONPATH=$(cd .. && pwd)
+
 # Ejecutar el servidor
-python3 serve_dashboard.py
+cd ..
+python3 scripts_project/serve_dashboard.py
 

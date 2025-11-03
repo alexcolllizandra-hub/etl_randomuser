@@ -68,6 +68,7 @@ etl_randomuser/
 ## 📚 Documentación
 
 - **[README Completo](docs/README.md)** - Documentación detallada del proyecto
+- **[Guía de Scripts](docs/GUIA_SCRIPTS.md)** ⭐ - Todos los scripts y pipelines explicados
 - **[Explicación ETL](docs/EXPLICACION_ETL.md)** - Detalles técnicos del proceso ETL
 - **[Memoria Universitaria](docs/MEMORIA_ETL_UNIVERSITARIA.md)** - Documento académico completo
 - **[Guía Virtualización](docs/GUIA_VIRTUALIZACION.md)** - Setup con VM
@@ -94,8 +95,8 @@ git clone https://github.com/alexcolllizandra-hub/etl_randomuser.git
 cd etl_randomuser
 
 # Instalar dependencias
-pip install -r requirements.txt
-```
+   pip install -r requirements.txt
+   ```
 
 ---
 
