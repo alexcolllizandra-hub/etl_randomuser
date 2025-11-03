@@ -16,20 +16,19 @@ Entre sus principales características destacan: no requiere autenticación, gen
 
 La API RandomUser permite solicitar hasta **5000 usuarios en una sola petición**. Realizamos una petición HTTP que devuelve un JSON con todos los usuarios solicitados.
 
-**Código 5.1. Implementación de extracción con seed en extract_users()**
+**Código 5.1. Implementación de extracción con configuración centralizada en extract_users()**
 
 ```python
-def extract_users(self, n: int = 1000, seed: str = None) -> List[User]:
+def extract_users(self, n: int = None, seed: str = None) -> List[User]:
     """Extrae usuarios desde la API RandomUser."""
+    n = n or DEFAULT_N_USERS  # Usa configuración centralizada
     seed_msg = f" con seed='{seed}'" if seed else ""
     logger.info(f"Iniciando extracción de {n} usuarios{seed_msg}...")
     
-    url = f"https://randomuser.me/api/?results={n}"
-    if seed:
-        url += f"&seed={seed}"
+    url = build_randomuser_url(n_users=n, seed=seed)  # Helper de config.py
     
     try:
-        response = requests.get(url, timeout=30)
+        response = requests.get(url, timeout=API_TIMEOUT)
         response.raise_for_status()
         data = response.json().get("results", [])
         users = [User.from_api(u) for u in data]
@@ -172,8 +171,8 @@ def enrich_with_country_data(self):
     for country in unique_countries:
         try:
             resp = requests.get(
-                f"https://restcountries.com/v3.1/name/{country}?fields=name,region,population",
-                timeout=30
+                build_restcountries_url(country),
+                timeout=API_TIMEOUT
             )
             if resp.status_code == 200:
                 info = resp.json()[0]
@@ -391,7 +390,7 @@ Cada gráfico se guarda con resolución de 300 DPI y se muestra también en pant
 El proceso ETL implementado sigue esta secuencia:
 
 **1. EXTRACT** 
-   - Descarga de usuarios desde RandomUser API (paginación y seed opcional)
+   - Descarga de usuarios desde RandomUser API (hasta 5000 usuarios en una sola petición, seed opcional)
    - Conversión de JSON a objetos User
 
 **2. CLEAN**

@@ -15,16 +15,15 @@ La API RandomUser permite solicitar hasta 5000 usuarios en una sola petición me
 El proceso de extracción se realiza mediante una petición HTTP utilizando la librería `requests` de Python. La respuesta del servidor es un objeto JSON estructurado que contiene todos los usuarios solicitados dentro de un campo denominado "results".
 
 ```python
-url = f"https://randomuser.me/api/?results={n}"
-if seed:
-    url += f"&seed={seed}"
+# La URL se construye usando la función helper de config.py
+url = build_randomuser_url(n_users=n, seed=seed)
 
-response = requests.get(url, timeout=30)
+response = requests.get(url, timeout=API_TIMEOUT)
 data = response.json().get("results", [])
 users = [User.from_api(u) for u in data]
 ```
 
-Este fragmento de código ilustra cómo se construye la URL de la API, incorporando el parámetro `seed` opcional cuando es proporcionado. El timeout de 30 segundos garantiza que las peticiones no se queden bloqueadas indefinidamente en caso de problemas de conectividad. La conversión de JSON a objetos `User` estructurados se realiza mediante list comprehension, aplicando el método `from_api()` a cada registro.
+Este fragmento de código ilustra cómo se construye la URL de la API usando la configuración centralizada (`config.py`). El timeout de API_TIMEOUT (30 segundos por defecto) garantiza que las peticiones no se queden bloqueadas indefinidamente en caso de problemas de conectividad. La conversión de JSON a objetos `User` estructurados se realiza mediante list comprehension, aplicando el método `from_api()` a cada registro.
 
 ### Seed (Semilla) - Reproducibilidad
 
@@ -47,10 +46,9 @@ users = extract_users(100, seed="proyecto_etl")
 La implementación del parámetro seed se realiza de forma opcional mediante una comprobación condicional que agrega el parámetro a la URL únicamente cuando es proporcionado:
 
 ```python
-def extract_users(self, n: int = 1000, seed: str = None) -> List[User]:
-    url = f"https://randomuser.me/api/?results={n}"
-    if seed:
-        url += f"&seed={seed}"  # Agrega parámetro seed a la URL
+def extract_users(self, n: int = None, seed: str = None) -> List[User]:
+    n = n or DEFAULT_N_USERS  # Configuración centralizada
+    url = build_randomuser_url(n_users=n, seed=seed)  # Helper de config.py
 ```
 
 ### Ejemplo de Endpoint y Datos
