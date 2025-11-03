@@ -48,11 +48,16 @@ class ETLController:
 
         # 5. Visualizaciones
         logger.info("Generando visualizaciones...")
+        # Gráficos originales
         self.visualizer.plot_age_distribution(users)
         self.visualizer.plot_gender_distribution(users)
         self.visualizer.plot_top_countries(users)
         self.visualizer.plot_age_by_country(users)
         self.visualizer.plot_correlation_matrix(users)
+        # Nuevos gráficos
+        self.visualizer.plot_region_distribution(users)
+        self.visualizer.plot_age_groups_distribution(users)
+        self.visualizer.plot_gender_by_top_countries(users)
 
         # 6. Guardar estadísticas para el dashboard
         self._save_stats_for_dashboard(advanced_stats, len(users))

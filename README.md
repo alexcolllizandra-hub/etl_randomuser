@@ -48,6 +48,8 @@ etl_randomuser/
 │
 ├── docs/                    # Documentación
 │   ├── README.md
+│   ├── GUIA_SCRIPTS.md
+│   ├── MEJORAS_IMPLEMENTADAS.md
 │   ├── EXPLICACION_ETL.md
 │   ├── MEMORIA_ETL_UNIVERSITARIA.md
 │   └── GUIA_VIRTUALIZACION.md
@@ -69,6 +71,7 @@ etl_randomuser/
 
 - **[README Completo](docs/README.md)** - Documentación detallada del proyecto
 - **[Guía de Scripts](docs/GUIA_SCRIPTS.md)** ⭐ - Todos los scripts y pipelines explicados
+- **[Mejoras Implementadas](docs/MEJORAS_IMPLEMENTADAS.md)** ⭐ - Transformaciones y visualizaciones avanzadas
 - **[Explicación ETL](docs/EXPLICACION_ETL.md)** - Detalles técnicos del proceso ETL
 - **[Memoria Universitaria](docs/MEMORIA_ETL_UNIVERSITARIA.md)** - Documento académico completo
 - **[Guía Virtualización](docs/GUIA_VIRTUALIZACION.md)** - Setup con VM
@@ -80,7 +83,9 @@ etl_randomuser/
 - ✅ **ETL completo**: Extract, Transform, Load
 - ✅ **Sin pandas/numpy**: Cálculos manuales
 - ✅ **Doble almacenamiento**: CSV + SQLite
-- ✅ **5 visualizaciones** automáticas
+- ✅ **8 visualizaciones** automáticas (3 nuevas añadidas)
+- ✅ **Estadísticas avanzadas**: CV, IQR, min/max, cuartiles
+- ✅ **Transformaciones ampliadas**: categorías, preferencias, outliers
 - ✅ **Dashboard interactivo** HTML
 - ✅ **Verificaciones automáticas**
 - ✅ **100% reproducible** con seeds
@@ -129,8 +134,18 @@ python scripts_project\run_etl_with_tests.py
 Tras ejecutar el pipeline:
 - `data/usuarios.csv` - Datos en formato CSV
 - `data/usuarios.db` - Base de datos SQLite
-- `plots/*.png` - 5 gráficos estadísticos
+- `plots/*.png` - 8 gráficos estadísticos
 - Dashboard interactivo en http://localhost:8000
+
+**8 Gráficos generados:**
+1. Distribución de Edades (histograma)
+2. Distribución por Género (barras)
+3. Top 10 Países (barras horizontales)
+4. Edad por País (boxplots)
+5. Matriz de Correlación (heatmap)
+6. 📊 Distribución por Regiones (barras - NUEVO)
+7. 📊 Grupos de Edad (pie chart - NUEVO)
+8. 📊 Género por País (barras apiladas - NUEVO)
 
 ---
 

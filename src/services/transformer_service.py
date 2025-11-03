@@ -36,26 +36,38 @@ class TransformerService:
     # ENRIQUECIMIENTO DE DATOS
     # ----------------------------
     def enrich_data(self):
-        """Crea nuevas columnas derivadas: grupos de edad y dominio de email."""
+        """Crea nuevas columnas derivadas: grupos de edad, dominio de email y categorías."""
         for u in self.users:
             # Clasificación de grupo de edad
             if u.age < 18:
                 age_group = "<18"
+                age_category = "Adolescente"
             elif u.age < 30:
                 age_group = "18-30"
+                age_category = "Joven Adulto"
             elif u.age < 45:
                 age_group = "31-45"
+                age_category = "Adulto Joven"
             elif u.age < 60:
                 age_group = "46-60"
+                age_category = "Adulto Maduro"
             elif u.age < 80:
                 age_group = "61-80"
+                age_category = "Senior"
             else:
                 age_group = "80+"
+                age_category = "Longevo"
 
             u.age_group = age_group
+            u.age_category = age_category
             u.email_domain = u.email.split("@")[-1] if "@" in u.email else "unknown"
+            
+            # Calcular índice simulado de preferencia de email (basado en dominio)
+            # Dominios comunes = mayor preferencia
+            popular_domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com']
+            u.email_preference = "Popular" if u.email_domain in popular_domains else "Otro"
 
-        logger.info("Datos enriquecidos: grupos de edad y dominios de email agregados.")
+        logger.info("Datos enriquecidos: grupos de edad, categorías, dominios y preferencias agregados.")
 
 
 
@@ -130,18 +142,27 @@ class TransformerService:
         countries = [u.country for u in self.users]
         domains = [getattr(u, "email_domain", "unknown") for u in self.users]
         regions = [getattr(u, "region", "N/A") for u in self.users]
+        age_groups = [getattr(u, "age_group", "unknown") for u in self.users]
+
+        # Calcular coeficiente de variación (CV = std / mean)
+        cv_age = round((_pstdev(ages) / _mean(ages)) * 100, 2) if _mean(ages) > 0 else 0
 
         stats = {
             "total_users": len(self.users),
             "avg_age": round(_mean(ages), 2),
-            "std_age": round(_pstdev(ages), 2),
-            "q1_age": round(self._percentiles(ages, 25), 2),
             "median_age": round(_median(ages), 2),
+            "std_age": round(_pstdev(ages), 2),
+            "min_age": min(ages) if ages else 0,
+            "max_age": max(ages) if ages else 0,
+            "cv_age": cv_age,
+            "q1_age": round(self._percentiles(ages, 25), 2),
             "q3_age": round(self._percentiles(ages, 75), 2),
+            "iqr_age": round(self._percentiles(ages, 75) - self._percentiles(ages, 25), 2),
             "gender_distribution": dict(Counter(genders)),
             "top_countries": dict(Counter(countries).most_common(10)),
             "top_email_domains": dict(Counter(domains).most_common(5)),
             "regions": dict(Counter(regions)),
+            "age_groups": dict(Counter(age_groups)),
         }
 
         logger.info(f"Estadísticas avanzadas calculadas: {stats}")

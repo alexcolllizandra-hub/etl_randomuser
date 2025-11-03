@@ -173,3 +173,111 @@ class VisualizationService:
         plt.savefig(filepath, dpi=300, bbox_inches='tight')
         print(f"Gráfico guardado en: {filepath}")
         plt.show()
+
+    def plot_region_distribution(self, users: list[User]):
+        """Distribución de usuarios por región continental."""
+        if not users:
+            print("No hay datos para generar gráfico de regiones.")
+            return
+        
+        # Contar usuarios por región
+        regions = [getattr(u, "region", "N/A") for u in users]
+        region_counts = Counter(regions)
+        sorted_regions = sorted(region_counts.items(), key=lambda x: x[1], reverse=True)
+        
+        regions_names = [r[0] for r in sorted_regions]
+        regions_counts = [r[1] for r in sorted_regions]
+        
+        plt.figure(figsize=(10, 6))
+        bars = plt.bar(regions_names, regions_counts, color='#9b59b6', alpha=0.8, edgecolor='black')
+        plt.title("Distribución de Usuarios por Región Continental")
+        plt.xlabel("Región")
+        plt.ylabel("Cantidad de Usuarios")
+        plt.xticks(rotation=45, ha='right')
+        plt.grid(True, alpha=0.3, axis='y')
+        
+        # Añadir etiquetas de valores en las barras
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(bar.get_x() + bar.get_width()/2., height,
+                    f'{int(height)}',
+                    ha='center', va='bottom')
+        
+        plt.tight_layout()
+        filepath = os.path.join(self.output_dir, "distribucion_regiones.png")
+        plt.savefig(filepath, dpi=300, bbox_inches='tight')
+        print(f"Gráfico guardado en: {filepath}")
+        plt.show()
+
+    def plot_age_groups_distribution(self, users: list[User]):
+        """Distribución por grupos de edad."""
+        if not users:
+            print("No hay datos para generar gráfico de grupos de edad.")
+            return
+        
+        age_groups = [getattr(u, "age_group", "unknown") for u in users]
+        age_group_counts = Counter(age_groups)
+        
+        # Ordenar por edad (no alfabéticamente)
+        order = ["<18", "18-30", "31-45", "46-60", "61-80", "80+"]
+        sorted_groups = sorted(age_group_counts.items(), 
+                              key=lambda x: order.index(x[0]) if x[0] in order else 999)
+        
+        groups_names = [g[0] for g in sorted_groups]
+        groups_counts = [g[1] for g in sorted_groups]
+        
+        colors = ['#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#9b59b6', '#34495e']
+        
+        plt.figure(figsize=(10, 6))
+        plt.pie(groups_counts, labels=groups_names, autopct='%1.1f%%', 
+                colors=colors[:len(groups_names)], startangle=90)
+        plt.title("Distribución de Usuarios por Grupos de Edad")
+        plt.tight_layout()
+        filepath = os.path.join(self.output_dir, "distribucion_grupos_edad.png")
+        plt.savefig(filepath, dpi=300, bbox_inches='tight')
+        print(f"Gráfico guardado en: {filepath}")
+        plt.show()
+
+    def plot_gender_by_top_countries(self, users: list[User], top_n: int = 8):
+        """Gráfico de barras apilado: género por país (top N)."""
+        if not users:
+            print("No hay datos para generar gráfico de género por país.")
+            return
+        
+        # Obtener top países
+        country_counts = Counter(u.country for u in users)
+        top_countries = [c[0] for c in country_counts.most_common(top_n)]
+        
+        # Contar por país y género
+        country_gender_data = {country: {"male": 0, "female": 0} for country in top_countries}
+        
+        for u in users:
+            if u.country in top_countries:
+                gender = u.gender
+                if gender in country_gender_data[u.country]:
+                    country_gender_data[u.country][gender] += 1
+        
+        males = [country_gender_data[c]["male"] for c in top_countries]
+        females = [country_gender_data[c]["female"] for c in top_countries]
+        
+        # Crear gráfico apilado
+        x_pos = range(len(top_countries))
+        width = 0.6
+        
+        fig, ax = plt.subplots(figsize=(12, 6))
+        bars1 = ax.bar(x_pos, males, width, label='Hombre', color='#3498db', alpha=0.8)
+        bars2 = ax.bar(x_pos, females, width, bottom=males, label='Mujer', color='#e74c3c', alpha=0.8)
+        
+        ax.set_xlabel('País')
+        ax.set_ylabel('Cantidad de Usuarios')
+        ax.set_title(f'Distribución de Género por País (Top {top_n})')
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels(top_countries, rotation=45, ha='right')
+        ax.legend()
+        ax.grid(True, alpha=0.3, axis='y')
+        
+        plt.tight_layout()
+        filepath = os.path.join(self.output_dir, "genero_por_pais.png")
+        plt.savefig(filepath, dpi=300, bbox_inches='tight')
+        print(f"Gráfico guardado en: {filepath}")
+        plt.show()

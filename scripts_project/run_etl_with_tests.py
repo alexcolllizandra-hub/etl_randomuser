@@ -242,7 +242,10 @@ def verify_plots():
         "distribucion_genero.png",
         "top_paises.png",
         "edad_por_pais.png",
-        "matriz_correlacion.png"
+        "matriz_correlacion.png",
+        "distribucion_regiones.png",
+        "distribucion_grupos_edad.png",
+        "genero_por_pais.png"
     ]
     
     if not os.path.exists(plots_dir):
