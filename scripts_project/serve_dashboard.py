@@ -26,8 +26,8 @@ class ETLHandler(http.server.SimpleHTTPRequestHandler):
 
 def main():
     """Inicia el servidor HTTP para el dashboard."""
-    # Cambiar al directorio raíz del proyecto
-    project_root = Path(__file__).parent.absolute()
+    # Cambiar al directorio raíz del proyecto (subir dos niveles desde scripts_project)
+    project_root = Path(__file__).parent.parent.absolute()
     os.chdir(project_root)
     
     with socketserver.TCPServer(("", PORT), ETLHandler) as httpd:
@@ -37,16 +37,16 @@ def main():
         print(f"\n✓ Servidor iniciado en puerto {PORT}")
         print(f"✓ Directorio raíz: {project_root}")
         print(f"\n🌐 Abriendo dashboard en el navegador...")
-        print(f"\n📍 URL: http://localhost:{PORT}/dashboard.html")
+        print(f"\n📍 URL: http://localhost:{PORT}/dashboard/dashboard.html")
         print("\n⚠ Presiona Ctrl+C para detener el servidor")
         print("=" * 70 + "\n")
         
         # Abrir el navegador automáticamente
         try:
-            webbrowser.open(f'http://localhost:{PORT}/dashboard.html')
+            webbrowser.open(f'http://localhost:{PORT}/dashboard/dashboard.html')
         except:
             print("⚠ No se pudo abrir el navegador automáticamente.")
-            print("   Abre manualmente: http://localhost:8000/dashboard.html")
+            print("   Abre manualmente: http://localhost:8000/dashboard/dashboard.html")
         
         try:
             httpd.serve_forever()

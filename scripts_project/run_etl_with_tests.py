@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Pipeline completo: Ejecuta el ETL y luego verifica la base de datos SQLite
 """
@@ -5,6 +6,11 @@ import os
 import sys
 import subprocess
 import sqlite3
+
+# Configurar encoding UTF-8 para Windows
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
 def print_header(text):
     """Imprime un encabezado formateado."""
@@ -264,14 +270,23 @@ def verify_plots():
 
 def main():
     """Pipeline principal que ejecuta el ETL y todas las verificaciones."""
+    import sys
+    
+    # Verificar si se debe saltar el ETL
+    skip_etl = "--skip-etl" in sys.argv or "-s" in sys.argv
+    
     print_header("PIPELINE COMPLETO: ETL + VERIFICACIONES")
     
-    # Ejecutar ETL
-    etl_success = run_etl()
-    
-    if not etl_success:
-        print_header("PIPELINE FALLIDO: El proceso ETL terminó con errores")
-        return False
+    # Ejecutar ETL (a menos que se especifique --skip-etl)
+    if skip_etl:
+        print("Omitiendo ejecución del ETL (--skip-etl)")
+        etl_success = True
+    else:
+        etl_success = run_etl()
+        
+        if not etl_success:
+            print_header("PIPELINE FALLIDO: El proceso ETL terminó con errores")
+            return False
     
     # Verificar resultados
     csv_success = verify_csv()

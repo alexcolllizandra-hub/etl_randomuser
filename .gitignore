@@ -69,10 +69,20 @@ wheels/
 .installed.cfg
 *.egg
 
-# Scripts de ejecución (los excluiremos porque cada desarrollador puede tener su propia configuración)
-# Pero mantenemos los que son estándar del proyecto
-!run_etl.bat
-!run_etl.sh
+# Scripts de ejecución (mantener los del proyecto)
+!scripts_project/run_etl.bat
+!scripts_project/run_etl.sh
+!scripts_project/run_etl_with_tests.py
+!scripts_project/serve_dashboard.py
+!scripts_project/VIEW_DASHBOARD.bat
+!scripts_project/VIEW_DASHBOARD.sh
 
-# Guías (mantener)
-!GUIA_VIRTUALIZACION.md
+# Pipeline principal
+!PIPELINE.bat
+!PIPELINE.sh
+
+# Mantener documentación
+!docs/*.md
+
+# Mantener dashboard
+!dashboard/dashboard.html
