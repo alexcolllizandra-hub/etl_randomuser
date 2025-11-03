@@ -57,6 +57,9 @@ class TransformerService:
 
         logger.info("Datos enriquecidos: grupos de edad y dominios de email agregados.")
 
+
+
+
     # ----------------------------
     # DETECCIÓN DE OUTLIERS
     # ----------------------------

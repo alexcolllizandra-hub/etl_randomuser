@@ -49,3 +49,5 @@ class SQLLoader(BaseLoader):
         conn.commit()
         conn.close()
         logger.info(f"Datos insertados correctamente en {db_path}")
+
+

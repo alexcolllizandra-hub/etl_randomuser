@@ -99,6 +99,7 @@ El resultado es una colección de objetos Python tipados que facilitan el trabaj
 
 La fase de transformación constituye el núcleo del proceso ETL, donde los datos extraídos se validan, limpian, enriquecen y analizan para asegurar su calidad y utilidad para los análisis posteriores. Esta etapa se subdivide en varias operaciones que progresan desde la validación básica hasta el análisis estadístico avanzado.
 
+
 ### Limpieza de Datos
 
 La limpieza de datos representa el primer paso crítico para garantizar la calidad del dataset. Durante este proceso se aplican validaciones estrictas a cada registro para identificar y eliminar aquellos que presentan información incompleta o inconsistente. Las reglas de validación implementadas son las siguientes:

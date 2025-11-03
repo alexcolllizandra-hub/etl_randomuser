@@ -367,12 +367,14 @@ def plot_age_distribution(self, users: list[User]) -> None:
     if not users:
         print("No hay datos para generar gráfico de distribución de edades.")
         return
-    df = pd.DataFrame([u.__dict__ for u in users])
+    
+    ages = [u.age for u in users]
     plt.figure(figsize=(8, 5))
-    sns.histplot(df["age"], bins=15, kde=True, color="#1f77b4")
+    plt.hist(ages, bins=15, color="#1f77b4", edgecolor="black", alpha=0.7)
     plt.title("Distribución de Edades")
     plt.xlabel("Edad")
     plt.ylabel("Frecuencia")
+    plt.grid(True, alpha=0.3)
     plt.tight_layout()
     filepath = os.path.join(self.output_dir, "distribucion_edades.png")
     plt.savefig(filepath, dpi=300, bbox_inches='tight')

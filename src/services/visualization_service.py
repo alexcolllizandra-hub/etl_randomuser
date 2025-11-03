@@ -31,6 +31,7 @@ class VisualizationService:
         print(f"Gráfico guardado en: {filepath}")
         plt.show()
 
+
     def plot_gender_distribution(self, users: list[User]) -> None:
         if not users:
             print("No hay datos para generar gráfico de distribución por género.")
