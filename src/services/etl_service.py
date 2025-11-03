@@ -3,6 +3,7 @@ from collections import Counter
 from typing import List, Dict, Any
 from src.models.user_model import User
 from src.utils.logger import setup_logger
+from src.config import DEFAULT_N_USERS, API_TIMEOUT, build_randomuser_url
 
 logger = setup_logger(__name__)
 
@@ -29,28 +30,26 @@ def _pstdev(data: list) -> float:
 class ETLService:
     """Servicio ETL: extracción y transformación básica de usuarios."""
 
-    def extract_users(self, n: int = 1000, seed: str = None) -> List[User]:
+    def extract_users(self, n: int = None, seed: str = None) -> List[User]:
         """
         Extrae usuarios desde la API RandomUser.
         
         Args:
-            n: Número de usuarios a extraer (por defecto 1000, máximo 5000)
+            n: Número de usuarios a extraer (por defecto desde config)
             seed: Semilla opcional para reproducibilidad. Si se proporciona,
                   la API devolverá siempre los mismos usuarios para ese seed.
                   
         Returns:
             Lista de objetos User con los datos extraídos.
         """
-
+        n = n or DEFAULT_N_USERS
         seed_msg = f" con seed='{seed}'" if seed else ""
         logger.info(f"Iniciando extracción de {n} usuarios{seed_msg}...")
 
-        url = f"https://randomuser.me/api/?results={n}"
-        if seed:
-            url += f"&seed={seed}"
+        url = build_randomuser_url(n_users=n, seed=seed)
             
         try:
-            response = requests.get(url, timeout=30)
+            response = requests.get(url, timeout=API_TIMEOUT)
             response.raise_for_status()
             data = response.json().get("results", [])
             users = [User.from_api(u) for u in data]

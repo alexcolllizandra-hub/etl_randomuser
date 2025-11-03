@@ -1,21 +1,21 @@
 {
-  "total_users": 100,
-  "avg_age": 52.48,
+  "total_users": 1000,
+  "avg_age": 52.33,
   "total_countries": 10,
   "gender_distribution": {
-    "male": 56,
-    "female": 44
+    "female": 482,
+    "male": 518
   },
   "top_countries": {
-    "Australia": 10,
-    "Norway": 8,
-    "Spain": 8,
-    "France": 8,
-    "Serbia": 7,
-    "Netherlands": 6,
-    "Germany": 6,
-    "Canada": 6,
-    "India": 5,
-    "United Kingdom": 5
+    "Spain": 62,
+    "Norway": 57,
+    "United Kingdom": 55,
+    "Germany": 55,
+    "Canada": 54,
+    "Mexico": 53,
+    "Ireland": 50,
+    "India": 49,
+    "Finland": 49,
+    "Denmark": 49
   }
 }

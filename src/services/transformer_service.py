@@ -2,6 +2,7 @@ import requests
 from collections import Counter
 from src.models.user_model import User
 from src.utils.logger import setup_logger
+from src.config import API_TIMEOUT, POPULAR_EMAIL_DOMAINS, OUTLIER_IQR_COEFFICIENT, TOP_COUNTRIES_COUNT, TOP_EMAIL_DOMAINS_COUNT, build_restcountries_url
 
 logger = setup_logger(__name__)
 
@@ -64,8 +65,7 @@ class TransformerService:
             
             # Calcular índice simulado de preferencia de email (basado en dominio)
             # Dominios comunes = mayor preferencia
-            popular_domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com']
-            u.email_preference = "Popular" if u.email_domain in popular_domains else "Otro"
+            u.email_preference = "Popular" if u.email_domain in POPULAR_EMAIL_DOMAINS else "Otro"
 
         logger.info("Datos enriquecidos: grupos de edad, categorías, dominios y preferencias agregados.")
 
@@ -84,7 +84,7 @@ class TransformerService:
             
         q1, q3 = self._percentiles(ages, 25), self._percentiles(ages, 75)
         iqr = q3 - q1
-        lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr
+        lower, upper = q1 - OUTLIER_IQR_COEFFICIENT * iqr, q3 + OUTLIER_IQR_COEFFICIENT * iqr
 
         for u in self.users:
             u.is_outlier = u.age < lower or u.age > upper
@@ -114,8 +114,8 @@ class TransformerService:
         for country in unique_countries:
             try:
                 resp = requests.get(
-                    f"https://restcountries.com/v3.1/name/{country}?fields=name,region,population",
-                    timeout=30
+                    build_restcountries_url(country),
+                    timeout=API_TIMEOUT
                 )
                 if resp.status_code == 200:
                     info = resp.json()[0]
@@ -159,8 +159,8 @@ class TransformerService:
             "q3_age": round(self._percentiles(ages, 75), 2),
             "iqr_age": round(self._percentiles(ages, 75) - self._percentiles(ages, 25), 2),
             "gender_distribution": dict(Counter(genders)),
-            "top_countries": dict(Counter(countries).most_common(10)),
-            "top_email_domains": dict(Counter(domains).most_common(5)),
+            "top_countries": dict(Counter(countries).most_common(TOP_COUNTRIES_COUNT)),
+            "top_email_domains": dict(Counter(domains).most_common(TOP_EMAIL_DOMAINS_COUNT)),
             "regions": dict(Counter(regions)),
             "age_groups": dict(Counter(age_groups)),
         }

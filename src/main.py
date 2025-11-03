@@ -21,7 +21,7 @@ def main():
     controller = ETLController()
 
     # Ejecutamos el pipeline (por defecto extrae 100 usuarios)
-    controller.run(n_users=100)
+    controller.run(n_users=1000)
 
     print("\nProceso ETL finalizado con éxito.")
 

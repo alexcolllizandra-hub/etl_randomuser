@@ -103,7 +103,7 @@ cd etl_randomuser
 
 # Instalar dependencias
    pip install -r requirements.txt
-   ```
+```
 
 ---
 
@@ -117,7 +117,7 @@ python -m src.main
 ```
 
 **Solo Dashboard (si ya ejecutaste ETL antes):**
-```bash
+   ```bash
 # Windows
 scripts_project\VIEW_DASHBOARD.bat
 
@@ -126,9 +126,9 @@ chmod +x scripts_project/VIEW_DASHBOARD.sh && ./scripts_project/VIEW_DASHBOARD.s
 ```
 
 **Solo verificaciones:**
-```bash
+   ```bash
 python scripts_project\run_etl_with_tests.py --skip-etl
-```
+   ```
 
 ---
 
