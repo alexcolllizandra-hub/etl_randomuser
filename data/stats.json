@@ -1,0 +1,21 @@
+{
+  "total_users": 100,
+  "avg_age": 51.41,
+  "total_countries": 10,
+  "gender_distribution": {
+    "male": 53,
+    "female": 47
+  },
+  "top_countries": {
+    "Ukraine": 11,
+    "Finland": 9,
+    "Switzerland": 8,
+    "Australia": 7,
+    "France": 6,
+    "United Kingdom": 6,
+    "Iran": 6,
+    "Spain": 5,
+    "Netherlands": 5,
+    "Mexico": 4
+  }
+}

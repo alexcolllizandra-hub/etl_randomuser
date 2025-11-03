@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ETL - Análisis de Usuarios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .plots-section {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .plot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .plot-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .plot-container h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .plot-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+
+        .loader::after {
+            content: "...";
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: "."; }
+            40% { content: ".."; }
+            60%, 100% { content: "..."; }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .plot-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Dashboard ETL</h1>
+            <p>Análisis de Usuarios Aleatorios - Proceso ETL Completo</p>
+        </div>
+
+        <div class="stats-container" id="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="total-users">0</div>
+                <div class="stat-label">Total Usuarios</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avg-age">0</div>
+                <div class="stat-label">Edad Promedio</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="countries">0</div>
+                <div class="stat-label">Países</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="plots">5</div>
+                <div class="stat-label">Visualizaciones</div>
+            </div>
+        </div>
+
+        <div class="plots-section">
+            <h2 class="section-title">Visualizaciones del Análisis</h2>
+            
+            <div class="plot-grid">
+                <div class="plot-container">
+                    <h3>📈 Distribución de Edades</h3>
+                    <img src="plots/distribucion_edades.png" 
+                         alt="Distribución de Edades" 
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
+                </div>
+
+                <div class="plot-container">
+                    <h3>👥 Distribución por Género</h3>
+                    <img src="plots/distribucion_genero.png" 
+                         alt="Distribución por Género"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
+                </div>
+
+                <div class="plot-container">
+                    <h3>🌍 Top 10 Países</h3>
+                    <img src="plots/top_paises.png" 
+                         alt="Top Países"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
+                </div>
+
+                <div class="plot-container">
+                    <h3>📊 Edad por País</h3>
+                    <img src="plots/edad_por_pais.png" 
+                         alt="Edad por País"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
+                </div>
+
+                <div class="plot-container" style="grid-column: 1 / -1;">
+                    <h3>🔗 Matriz de Correlación</h3>
+                    <img src="plots/matriz_correlacion.png" 
+                         alt="Matriz de Correlación"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Dashboard generado automáticamente por el proceso ETL</p>
+            <p style="margin-top: 5px; font-size: 0.9em; opacity: 0.8;">
+                Creado con Python, Matplotlib y HTML/CSS
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Función para obtener estadísticas de la base de datos SQLite
+        async function loadStats() {
+            try {
+                // Intentar cargar estadísticas si están disponibles
+                // En producción, esto podría ser una API o un archivo JSON
+                const statsPath = 'data/stats.json';
+                
+                try {
+                    const response = await fetch(statsPath);
+                    const stats = await response.json();
+                    
+                    document.getElementById('total-users').textContent = stats.total_users || 'N/A';
+                    document.getElementById('avg-age').textContent = stats.avg_age ? stats.avg_age.toFixed(1) : 'N/A';
+                    document.getElementById('countries').textContent = stats.total_countries || 'N/A';
+                } catch (e) {
+                    // Si no hay archivo de estadísticas, calcularlas del CSV
+                    console.log('No se encontró stats.json, intentando calcular desde CSV...');
+                    calculateStatsFromCSV();
+                }
+            } catch (error) {
+                console.log('No se pudieron cargar las estadísticas:', error);
+                // Mostrar valores por defecto
+                document.getElementById('total-users').textContent = '?';
+                document.getElementById('avg-age').textContent = '?';
+                document.getElementById('countries').textContent = '?';
+            }
+        }
+
+        // Función para calcular estadísticas desde el CSV
+        function calculateStatsFromCSV() {
+            // Este enfoque requeriría CORS habilitado o servir el archivo desde un servidor
+            // Por ahora, dejamos valores por defecto
+            console.log('Las estadísticas se mostrarán después de ejecutar el ETL');
+        }
+
+        // Cargar estadísticas al cargar la página
+        window.addEventListener('DOMContentLoaded', loadStats);
+    </script>
+</body>
+</html>
+

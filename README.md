@@ -177,11 +177,18 @@ etl_randomuser/
 │   └── utils/
 │       └── logger.py         # Log amigable por consola y archivo
 │
-├── data/         # Aquí se almacenan los resultados: CSV y DB
+├── data/         # Aquí se almacenan los resultados: CSV, DB y stats.json
+├── plots/        # Carpeta con los gráficos PNG generados
 ├── logs/         # (opcional) Aquí se ubican los logs detallados si los configuras
-├── requirements.txt # Dependencias Python necesarias
-├── run_etl.bat   # Script de ejecución para Windows
-├── run_etl.sh    # Script de ejecución para Linux/Mac
+├── requirements.txt       # Dependencias Python necesarias
+├── run_etl.bat           # Script de ejecución para Windows
+├── run_etl.sh            # Script de ejecución para Linux/Mac
+├── run_pipeline.bat      # Pipeline completo con verificaciones (Windows)
+├── run_pipeline.sh       # Pipeline completo con verificaciones (Linux/Mac)
+├── VIEW_DASHBOARD.bat    # Abre el dashboard HTML (Windows)
+├── VIEW_DASHBOARD.sh     # Abre el dashboard HTML (Linux/Mac)
+├── dashboard.html        # Dashboard interactivo HTML
+├── serve_dashboard.py    # Servidor HTTP para el dashboard
 └── README.md
 ```
 
@@ -193,7 +200,32 @@ Tras ejecutar el proyecto, encontrarás:
 
 - `data/usuarios.csv` → Archivo CSV con toda la información procesada.
 - `data/usuarios.db`  → Base de datos SQLite para análisis con otros programas.
+- `data/stats.json` → Estadísticas en formato JSON para el dashboard.
+- `plots/` → Carpeta con 5 gráficos PNG generados automáticamente.
 - **Gráficos** (se abren automáticamente al final): distribución de edad, géneros, top países, etc.
+- **Dashboard HTML** interactivo para visualizar todos los resultados.
+
+### 🎨 Visualizar el Dashboard
+
+Para ver todos los gráficos y estadísticas en un dashboard interactivo:
+
+**Windows:**
+```bash
+VIEW_DASHBOARD.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x VIEW_DASHBOARD.sh
+./VIEW_DASHBOARD.sh
+```
+
+O ejecuta manualmente:
+```bash
+python serve_dashboard.py
+```
+
+Esto abrirá un navegador en `http://localhost:8000/dashboard.html` con un dashboard visual mostrando todas las visualizaciones generadas.
 
 Mensajes típicos por consola:
 ```

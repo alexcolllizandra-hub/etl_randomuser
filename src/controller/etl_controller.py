@@ -1,4 +1,5 @@
 import os
+import json
 from src.services.etl_service import ETLService
 from src.services.transformer_service import TransformerService
 from src.services.visualization_service import VisualizationService
@@ -53,4 +54,23 @@ class ETLController:
         self.visualizer.plot_age_by_country(users)
         self.visualizer.plot_correlation_matrix(users)
 
+        # 6. Guardar estadísticas para el dashboard
+        self._save_stats_for_dashboard(advanced_stats, len(users))
+
         logger.info("=== Proceso ETL completado con éxito ===")
+    
+    def _save_stats_for_dashboard(self, stats: dict, total_users: int):
+        """Guarda estadísticas en formato JSON para el dashboard HTML."""
+        dashboard_stats = {
+            "total_users": total_users,
+            "avg_age": stats.get("avg_age", 0),
+            "total_countries": len(stats.get("top_countries", {})),
+            "gender_distribution": stats.get("gender_distribution", {}),
+            "top_countries": dict(list(stats.get("top_countries", {}).items())[:10])
+        }
+        
+        stats_path = os.path.join(self.output_dir, "stats.json")
+        with open(stats_path, "w", encoding="utf-8") as f:
+            json.dump(dashboard_stats, f, indent=2, ensure_ascii=False)
+        
+        logger.info(f"Estadísticas para dashboard guardadas en {stats_path}")
