@@ -14,19 +14,28 @@
 
 ### Results y Paginación
 
-**Paginación automática:**
-- La API RandomUser permite solicitar hasta **5000 usuarios en una sola petición**
-- Si necesitas más de 5000, se divide automáticamente en múltiples páginas
-- Ejemplo: 100 usuarios = 1 página, 1000 usuarios = 1 página, 10000 usuarios = 2 páginas
+**Cómo funciona la paginación:**
+- La API RandomUser permite solicitar hasta **5000 usuarios en una sola petición HTTP**
+- Si necesitas más de 5000 usuarios, el sistema divide automáticamente en múltiples peticiones
+- Cada petición devuelve un JSON con los usuarios solicitados
+- El sistema junta todos los usuarios de todas las peticiones al final
+
+**Ejemplos:**
+- 100 usuarios → 1 petición HTTP de 100 usuarios
+- 1000 usuarios → 1 petición HTTP de 1000 usuarios  
+- 6000 usuarios → 2 peticiones HTTP (5000 + 1000 usuarios)
 
 **Código de paginación:**
 ```python
 batch_size = 5000  # Máximo permitido por la API
-pages = n // batch_size + (1 if n % batch_size else 0)
+pages = (n + batch_size - 1) // batch_size  # División redondeada hacia arriba
 
 for i in range(1, pages + 1):
-    url = f"https://randomuser.me/api/?results={batch_size}&page={i}"
-    # ... descarga de datos
+    users_in_batch = min(batch_size, n - (i - 1) * batch_size)
+    url = f"https://randomuser.me/api/?results={users_in_batch}"
+    if pages > 1:
+        url += f"&page={i}"
+    # ... descarga de datos y los junta
 ```
 
 ### Seed (Semilla) - Reproducibilidad

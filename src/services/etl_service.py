@@ -31,45 +31,45 @@ class ETLService:
 
     def extract_users(self, n: int = 1000, seed: str = None) -> List[User]:
         """
-        Extrae usuarios desde la API RandomUser con soporte para paginación y seed.
+        Extrae usuarios desde la API RandomUser.
         
         Args:
-            n: Número de usuarios a extraer (por defecto 1000, máximo 5000)
+            n: Número de usuarios a extraer (por defecto 1000)
             seed: Semilla opcional para reproducibilidad. Si se proporciona,
                   la API devolverá siempre los mismos usuarios para ese seed.
                   
         Returns:
             Lista de objetos User con los datos extraídos.
-            
-        Nota sobre Seed:
-            - Sin seed: Cada ejecución devuelve usuarios completamente aleatorios diferentes
-            - Con seed: Garantiza reproducibilidad - los mismos datos cada vez
-            - Ejemplo: seed="abc123" siempre devuelve la misma secuencia de usuarios
         """
 
         # La API RandomUser permite hasta 5000 usuarios en una sola petición
-        # Si necesitamos más, dividimos en páginas de 5000
+        # Si necesitamos más, dividimos en múltiples peticiones
         users = []
         batch_size = 5000  # Máximo permitido por la API
-        pages = n // batch_size + (1 if n % batch_size else 0)
+        pages = (n + batch_size - 1) // batch_size  # División redondeada hacia arriba
 
         seed_msg = f" con seed='{seed}'" if seed else ""
-        logger.info(f"Iniciando extracción de {n} usuarios en {pages} páginas{seed_msg}...")
+        logger.info(f"Iniciando extracción de {n} usuarios{seed_msg}...")
 
         for i in range(1, pages + 1):
-            # Construir URL con paginación y seed opcional
-            url = f"https://randomuser.me/api/?results={batch_size}&page={i}"
+            # Calcular cuántos usuarios pedir en esta petición
+            # En la última petición, pedimos solo los que faltan
+            users_in_batch = min(batch_size, n - (i - 1) * batch_size)
+            
+            url = f"https://randomuser.me/api/?results={users_in_batch}"
             if seed:
                 url += f"&seed={seed}"
+            if pages > 1:
+                url += f"&page={i}"
                 
             try:
                 response = requests.get(url, timeout=30)
                 response.raise_for_status()
                 data = response.json().get("results", [])
                 users.extend([User.from_api(u) for u in data])
-                logger.info(f"Página {i}/{pages} descargada: {len(data)} usuarios.")
+                logger.info(f"Petición {i}/{pages} completada: {len(data)} usuarios.")
             except Exception as e:
-                logger.error(f"Error en la página {i}: {e}")
+                logger.error(f"Error en la petición {i}: {e}")
 
         logger.info(f"Total extraído: {len(users)} usuarios.")
         return users[:n]

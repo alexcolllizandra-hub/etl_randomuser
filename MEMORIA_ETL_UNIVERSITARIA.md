@@ -18,41 +18,51 @@ Entre sus principales características destacan:
 
 ### Paginación automática
 
-La API RandomUser permite solicitar hasta **5000 usuarios en una sola petición**. Para casos que superen este límite, implementamos paginación automática que divide la solicitud en múltiples páginas.
+La API RandomUser permite solicitar hasta **5000 usuarios en una sola petición**. Para casos que superen este límite, implementamos paginación automática que divide la solicitud en múltiples peticiones HTTP.
+
+**Cómo funciona:**
+- Si solicitamos ≤5000 usuarios: se hace 1 única petición HTTP
+- Si solicitamos >5000 usuarios: se dividen en múltiples peticiones
 
 **Ejemplos de paginación:**
-- **100 usuarios** → 1 petición única (página 1)
-- **1000 usuarios** → 1 petición única (página 1)
-- **5000 usuarios** → 1 petición única (página 1)
-- **10000 usuarios** → 2 peticiones (páginas 1 y 2)
+- **100 usuarios** → 1 petición de 100 usuarios
+- **1000 usuarios** → 1 petición de 1000 usuarios
+- **6000 usuarios** → 2 peticiones: 1 de 5000 usuarios y otra de 1000 usuarios
+- **12000 usuarios** → 3 peticiones: 2 de 5000 y 1 de 2000
 
 **Código 5.1. Implementación de paginación y seed en extract_users()**
 
 ```python
 def extract_users(self, n: int = 1000, seed: str = None) -> List[User]:
-    """Extrae usuarios desde la API RandomUser con paginación y seed."""
+    """Extrae usuarios desde la API RandomUser."""
     # La API RandomUser permite hasta 5000 usuarios en una sola petición
-    # Si necesitamos más, dividimos en páginas de 5000
+    # Si necesitamos más, dividimos en múltiples peticiones
     users = []
     batch_size = 5000  # Máximo permitido por la API
-    pages = n // batch_size + (1 if n % batch_size else 0)
+    pages = (n + batch_size - 1) // batch_size  # División redondeada hacia arriba
     
     seed_msg = f" con seed='{seed}'" if seed else ""
-    logger.info(f"Iniciando extracción de {n} usuarios en {pages} páginas{seed_msg}...")
+    logger.info(f"Iniciando extracción de {n} usuarios{seed_msg}...")
     
     for i in range(1, pages + 1):
-        url = f"https://randomuser.me/api/?results={batch_size}&page={i}"
+        # Calcular cuántos usuarios pedir en esta petición
+        # En la última petición, pedimos solo los que faltan
+        users_in_batch = min(batch_size, n - (i - 1) * batch_size)
+        
+        url = f"https://randomuser.me/api/?results={users_in_batch}"
         if seed:
             url += f"&seed={seed}"
+        if pages > 1:
+            url += f"&page={i}"
         
         try:
             response = requests.get(url, timeout=30)
             response.raise_for_status()
             data = response.json().get("results", [])
             users.extend([User.from_api(u) for u in data])
-            logger.info(f"Página {i}/{pages} descargada: {len(data)} usuarios.")
+            logger.info(f"Petición {i}/{pages} completada: {len(data)} usuarios.")
         except Exception as e:
-            logger.error(f"Error en la página {i}: {e}")
+            logger.error(f"Error en la petición {i}: {e}")
     
     logger.info(f"Total extraído: {len(users)} usuarios.")
     return users[:n]
