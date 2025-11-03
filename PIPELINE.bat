@@ -1,6 +1,13 @@
 @echo off
 chcp 65001 >nul
 cls
+
+REM Cerrar servidores anteriores que puedan estar ocupando el puerto 8000
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8000 ^| findstr LISTENING') do (
+    echo Cerrando proceso anterior en puerto 8000...
+    taskkill /F /PID %%a >nul 2>&1
+)
+
 echo ============================================================
 echo       PIPELINE ETL COMPLETO
 echo ============================================================
@@ -31,7 +38,7 @@ if %ERRORLEVEL% NEQ 0 (
 echo.
 echo [3/3] Iniciando Dashboard...
 echo.
-echo Abriendo navegador en: http://localhost:8000/dashboard/dashboard.html
+echo Dashboard abierto en: http://localhost:8000/dashboard/dashboard.html
 echo Presiona Ctrl+C para detener el servidor
 echo ============================================================
 echo.

@@ -4,6 +4,11 @@
 # ============================================================
 
 clear
+
+# Cerrar servidores anteriores que puedan estar ocupando el puerto 8000
+echo "Verificando puerto 8000..."
+lsof -ti:8000 | xargs kill -9 2>/dev/null
+
 echo "============================================================"
 echo "     PIPELINE ETL COMPLETO"
 echo "============================================================"

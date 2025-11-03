@@ -188,56 +188,56 @@
             <div class="plot-grid">
                 <div class="plot-container">
                     <h3>📈 Distribución de Edades</h3>
-                    <img src="plots/distribucion_edades.png" 
+                    <img src="../plots/distribucion_edades.png" 
                          alt="Distribución de Edades" 
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
                 </div>
 
                 <div class="plot-container">
                     <h3>👥 Distribución por Género</h3>
-                    <img src="plots/distribucion_genero.png" 
+                    <img src="../plots/distribucion_genero.png" 
                          alt="Distribución por Género"
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
                 </div>
 
                 <div class="plot-container">
                     <h3>🌍 Top 10 Países</h3>
-                    <img src="plots/top_paises.png" 
+                    <img src="../plots/top_paises.png" 
                          alt="Top Países"
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
                 </div>
 
                 <div class="plot-container">
                     <h3>📊 Edad por País</h3>
-                    <img src="plots/edad_por_pais.png" 
+                    <img src="../plots/edad_por_pais.png" 
                          alt="Edad por País"
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
                 </div>
 
                 <div class="plot-container" style="grid-column: 1 / -1;">
                     <h3>🔗 Matriz de Correlación</h3>
-                    <img src="plots/matriz_correlacion.png" 
+                    <img src="../plots/matriz_correlacion.png" 
                          alt="Matriz de Correlación"
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
                 </div>
 
                 <div class="plot-container">
                     <h3>🌐 Distribución por Regiones</h3>
-                    <img src="plots/distribucion_regiones.png" 
+                    <img src="../plots/distribucion_regiones.png" 
                          alt="Distribución por Regiones"
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
                 </div>
 
                 <div class="plot-container">
                     <h3>📊 Grupos de Edad</h3>
-                    <img src="plots/distribucion_grupos_edad.png" 
+                    <img src="../plots/distribucion_grupos_edad.png" 
                          alt="Grupos de Edad"
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
                 </div>
 
                 <div class="plot-container" style="grid-column: 1 / -1;">
                     <h3>⚧️ Género por País</h3>
-                    <img src="plots/genero_por_pais.png" 
+                    <img src="../plots/genero_por_pais.png" 
                          alt="Género por País"
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-size=\"20\" fill=\"%23ccc\"%3EImagen no encontrada%3C/text%3E%3C/svg%3E'">
                 </div>
@@ -258,7 +258,7 @@
             try {
                 // Intentar cargar estadísticas si están disponibles
                 // En producción, esto podría ser una API o un archivo JSON
-                const statsPath = 'data/stats.json';
+                const statsPath = '../data/stats.json';
                 
                 try {
                     const response = await fetch(statsPath);
