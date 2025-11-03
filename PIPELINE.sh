@@ -3,45 +3,37 @@
 # PIPELINE COMPLETO: ETL + VERIFICACIONES + DASHBOARD
 # ============================================================
 
+clear
 echo "============================================================"
-echo "  PIPELINE ETL COMPLETO"
-echo "  ===================="
-echo "  Ejecutando: ETL | Verificaciones | Dashboard"
+echo "     PIPELINE ETL COMPLETO"
+echo "============================================================"
+echo "Ejecutando: ETL | Verificaciones | Dashboard"
 echo "============================================================"
 echo ""
 
-# Configurar PYTHONPATH
 export PYTHONPATH=$(pwd)
 
+# Fase 1: Ejecutar ETL
 echo "[1/3] Ejecutando proceso ETL..."
-echo ""
 python3 -m src.main
 if [ $? -ne 0 ]; then
-    echo ""
     echo "ERROR: El proceso ETL falló"
     exit 1
 fi
 
 echo ""
-echo "============================================================"
 echo "[2/3] Verificando resultados..."
-echo "============================================================"
-echo ""
 python3 scripts_project/run_etl_with_tests.py --skip-etl
 if [ $? -ne 0 ]; then
-    echo ""
     echo "ERROR: Las verificaciones fallaron"
     exit 1
 fi
 
 echo ""
-echo "============================================================"
 echo "[3/3] Iniciando Dashboard..."
-echo "============================================================"
 echo ""
-echo "Dashboard iniciado en: http://localhost:8000/dashboard.html"
-echo ""
-echo "Presiona Ctrl+C para detener el servidor cuando termines."
+echo "Abre en tu navegador: http://localhost:8000/dashboard/dashboard.html"
+echo "Presiona Ctrl+C para detener el servidor"
 echo "============================================================"
 echo ""
 

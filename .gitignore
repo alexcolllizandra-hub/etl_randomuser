@@ -69,7 +69,7 @@ wheels/
 .installed.cfg
 *.egg
 
-# Scripts de ejecución (mantener los del proyecto)
+# Scripts de ejecución
 !scripts_project/run_etl.bat
 !scripts_project/run_etl.sh
 !scripts_project/run_etl_with_tests.py
@@ -77,12 +77,10 @@ wheels/
 !scripts_project/VIEW_DASHBOARD.bat
 !scripts_project/VIEW_DASHBOARD.sh
 
-# Pipeline principal
+# Pipeline principal (TODO EN UNO)
 !PIPELINE.bat
 !PIPELINE.sh
 
-# Mantener documentación
+# Documentación y dashboard
 !docs/*.md
-
-# Mantener dashboard
 !dashboard/dashboard.html

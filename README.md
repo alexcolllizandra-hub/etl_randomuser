@@ -4,23 +4,25 @@ Proceso ETL (Extracción, Transformación y Carga) completo desarrollado en Pyth
 
 ---
 
-## 🚀 Inicio Rápido
+## ⚡ Ejecución Ultra-Rápida
 
-### Windows:
+**UN SOLO COMANDO PARA TODO:**
+
 ```bash
+# Windows
 PIPELINE.bat
-```
 
-### Linux/Mac:
-```bash
+# Linux/Mac/Debian (VM)
 chmod +x PIPELINE.sh
 ./PIPELINE.sh
 ```
 
-El pipeline ejecuta automáticamente:
-1. ✅ Extracción y procesamiento de datos
-2. ✅ Verificaciones de base de datos SQLite
-3. ✅ Dashboard interactivo en el navegador
+**¿Qué hace este comando?**
+1. ✅ **Ejecuta el ETL** → Extrae, transforma y carga datos
+2. ✅ **Verifica SQLite** → Comprueba que todo esté correcto
+3. ✅ **Abre Dashboard** → Visualiza los 8 gráficos en tu navegador
+
+**Eso es todo. Un solo comando y tienes todo funcionando.**
 
 ---
 
@@ -105,26 +107,27 @@ cd etl_randomuser
 
 ---
 
-## 📊 Ejecución Individual
+## 🔧 Scripts Adicionales
 
-### Solo ETL:
+Si necesitas ejecutar partes del proceso por separado:
+
+**Solo ETL:**
 ```bash
 python -m src.main
 ```
 
-### Solo Dashboard:
+**Solo Dashboard (si ya ejecutaste ETL antes):**
 ```bash
-# Windows:
+# Windows
 scripts_project\VIEW_DASHBOARD.bat
 
-# Linux/Mac:
-chmod +x scripts_project/VIEW_DASHBOARD.sh
-./scripts_project/VIEW_DASHBOARD.sh
+# Linux/Mac
+chmod +x scripts_project/VIEW_DASHBOARD.sh && ./scripts_project/VIEW_DASHBOARD.sh
 ```
 
-### Verificaciones:
+**Solo verificaciones:**
 ```bash
-python scripts_project\run_etl_with_tests.py
+python scripts_project\run_etl_with_tests.py --skip-etl
 ```
 
 ---
@@ -162,5 +165,28 @@ Proyecto académico - Uso libre para fines educativos
 
 ---
 
-**⭐ Para comenzar, ejecuta `PIPELINE.bat` o `PIPELINE.sh`**
+## 🎯 Para Usuarios de VM (Debian 12)
+
+**1. Clonar repositorio:**
+```bash
+git clone https://github.com/alexcolllizandra-hub/etl_randomuser.git
+cd etl_randomuser
+```
+
+**2. Instalar dependencias:**
+```bash
+pip3 install -r requirements.txt
+```
+
+**3. Ejecutar (TODO EN UNO):**
+```bash
+chmod +x PIPELINE.sh
+./PIPELINE.sh
+```
+
+El dashboard se abrirá automáticamente en tu navegador. Si no se abre, visita: `http://localhost:8000/dashboard/dashboard.html`
+
+---
+
+**⭐ RECOMENDACIÓN: Usa `PIPELINE.bat` o `PIPELINE.sh` - Es el camino más simple**
 
