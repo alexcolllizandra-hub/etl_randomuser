@@ -34,7 +34,7 @@ class ETLService:
         Extrae usuarios desde la API RandomUser.
         
         Args:
-            n: Número de usuarios a extraer (por defecto 1000)
+            n: Número de usuarios a extraer (por defecto 1000, máximo 5000)
             seed: Semilla opcional para reproducibilidad. Si se proporciona,
                   la API devolverá siempre los mismos usuarios para ese seed.
                   
@@ -42,37 +42,24 @@ class ETLService:
             Lista de objetos User con los datos extraídos.
         """
 
-        # La API RandomUser permite hasta 5000 usuarios en una sola petición
-        # Si necesitamos más, dividimos en múltiples peticiones
-        users = []
-        batch_size = 5000  # Máximo permitido por la API
-        pages = (n + batch_size - 1) // batch_size  # División redondeada hacia arriba
-
         seed_msg = f" con seed='{seed}'" if seed else ""
         logger.info(f"Iniciando extracción de {n} usuarios{seed_msg}...")
 
-        for i in range(1, pages + 1):
-            # Calcular cuántos usuarios pedir en esta petición
-            # En la última petición, pedimos solo los que faltan
-            users_in_batch = min(batch_size, n - (i - 1) * batch_size)
+        url = f"https://randomuser.me/api/?results={n}"
+        if seed:
+            url += f"&seed={seed}"
             
-            url = f"https://randomuser.me/api/?results={users_in_batch}"
-            if seed:
-                url += f"&seed={seed}"
-            if pages > 1:
-                url += f"&page={i}"
-                
-            try:
-                response = requests.get(url, timeout=30)
-                response.raise_for_status()
-                data = response.json().get("results", [])
-                users.extend([User.from_api(u) for u in data])
-                logger.info(f"Petición {i}/{pages} completada: {len(data)} usuarios.")
-            except Exception as e:
-                logger.error(f"Error en la petición {i}: {e}")
+        try:
+            response = requests.get(url, timeout=30)
+            response.raise_for_status()
+            data = response.json().get("results", [])
+            users = [User.from_api(u) for u in data]
+            logger.info(f"Extracción completada: {len(users)} usuarios.")
+        except Exception as e:
+            logger.error(f"Error en la extracción: {e}")
+            users = []
 
-        logger.info(f"Total extraído: {len(users)} usuarios.")
-        return users[:n]
+        return users
 
     def clean_users(self, users: List[User]) -> List[User]:
         """Limpia usuarios eliminando registros incompletos o inválidos."""

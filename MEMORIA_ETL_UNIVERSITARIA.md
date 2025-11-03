@@ -10,62 +10,35 @@ A continuación, describimos cada fase de forma detallada y natural, combinando 
 
 Para la fase de extracción utilizamos la API RandomUser, un servicio REST gratuito que genera datos de usuarios ficticios, ideal para proyectos de desarrollo y pruebas.
 
-Entre sus principales características destacan:
-- ✅ No requiere autenticación
-- ✅ Genera datos realistas pero completamente ficticios
-- ✅ Permite definir parámetros como número de resultados, páginas o seed (semilla)
-- ✅ Disponible en: https://randomuser.me/documentation
+Entre sus principales características destacan: no requiere autenticación, genera datos realistas pero completamente ficticios, permite definir parámetros como número de resultados y seed (semilla), y está disponible en https://randomuser.me/documentation.
 
-### Paginación automática
+### Extracción de datos
 
-La API RandomUser permite solicitar hasta **5000 usuarios en una sola petición**. Para casos que superen este límite, implementamos paginación automática que divide la solicitud en múltiples peticiones HTTP.
+La API RandomUser permite solicitar hasta **5000 usuarios en una sola petición**. Realizamos una petición HTTP que devuelve un JSON con todos los usuarios solicitados.
 
-**Cómo funciona:**
-- Si solicitamos ≤5000 usuarios: se hace 1 única petición HTTP
-- Si solicitamos >5000 usuarios: se dividen en múltiples peticiones
-
-**Ejemplos de paginación:**
-- **100 usuarios** → 1 petición de 100 usuarios
-- **1000 usuarios** → 1 petición de 1000 usuarios
-- **6000 usuarios** → 2 peticiones: 1 de 5000 usuarios y otra de 1000 usuarios
-- **12000 usuarios** → 3 peticiones: 2 de 5000 y 1 de 2000
-
-**Código 5.1. Implementación de paginación y seed en extract_users()**
+**Código 5.1. Implementación de extracción con seed en extract_users()**
 
 ```python
 def extract_users(self, n: int = 1000, seed: str = None) -> List[User]:
     """Extrae usuarios desde la API RandomUser."""
-    # La API RandomUser permite hasta 5000 usuarios en una sola petición
-    # Si necesitamos más, dividimos en múltiples peticiones
-    users = []
-    batch_size = 5000  # Máximo permitido por la API
-    pages = (n + batch_size - 1) // batch_size  # División redondeada hacia arriba
-    
     seed_msg = f" con seed='{seed}'" if seed else ""
     logger.info(f"Iniciando extracción de {n} usuarios{seed_msg}...")
     
-    for i in range(1, pages + 1):
-        # Calcular cuántos usuarios pedir en esta petición
-        # En la última petición, pedimos solo los que faltan
-        users_in_batch = min(batch_size, n - (i - 1) * batch_size)
-        
-        url = f"https://randomuser.me/api/?results={users_in_batch}"
-        if seed:
-            url += f"&seed={seed}"
-        if pages > 1:
-            url += f"&page={i}"
-        
-        try:
-            response = requests.get(url, timeout=30)
-            response.raise_for_status()
-            data = response.json().get("results", [])
-            users.extend([User.from_api(u) for u in data])
-            logger.info(f"Petición {i}/{pages} completada: {len(data)} usuarios.")
-        except Exception as e:
-            logger.error(f"Error en la petición {i}: {e}")
+    url = f"https://randomuser.me/api/?results={n}"
+    if seed:
+        url += f"&seed={seed}"
     
-    logger.info(f"Total extraído: {len(users)} usuarios.")
-    return users[:n]
+    try:
+        response = requests.get(url, timeout=30)
+        response.raise_for_status()
+        data = response.json().get("results", [])
+        users = [User.from_api(u) for u in data]
+        logger.info(f"Extracción completada: {len(users)} usuarios.")
+    except Exception as e:
+        logger.error(f"Error en la extracción: {e}")
+        users = []
+    
+    return users
 ```
 
 ### Parámetro Seed para reproducibilidad
@@ -83,7 +56,7 @@ users = extract_users(100, seed="proyecto_etl")
 
 **Estructura del endpoint:**
 ```
-https://randomuser.me/api/?results=500&page=1&seed=abc123
+https://randomuser.me/api/?results=1000&seed=abc123
 ```
 
 ### Modelo de datos User
@@ -126,10 +99,7 @@ En esta etapa realizamos tareas de limpieza, validación, enriquecimiento y aná
 
 ### 5.2.1. Limpieza y validación
 
-Eliminamos los registros con datos incompletos o inconsistentes aplicando las siguientes reglas:
-- ✅ El campo `email` no puede estar vacío
-- ✅ La `age` debe ser mayor que 0
-- ✅ El `country` no puede ser nulo
+Eliminamos los registros con datos incompletos o inconsistentes aplicando las siguientes reglas: el campo `email` no puede estar vacío, la `age` debe ser mayor que 0, y el `country` no puede ser nulo.
 
 **Código 5.3. Función de limpieza de usuarios**
 

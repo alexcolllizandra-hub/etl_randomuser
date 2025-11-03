@@ -29,7 +29,7 @@ Puedes abrir los archivos `src/services/etl_service.py` y `src/services/transfor
 
 ## 💡 ¿Qué hace exactamente este ETL?
 
-- **Extract (Extracción):** Descarga cientos o miles de perfiles aleatorios (ficticios) usando la API RandomUser. Soporta hasta 5000 usuarios en una sola petición, y automáticamente divide en múltiples peticiones si necesitas más.
+- **Extract (Extracción):** Descarga cientos o miles de perfiles aleatorios (ficticios) usando la API RandomUser. Soporta hasta 5000 usuarios en una sola petición HTTP.
 - **Transform (Transformación):**
   - Limpia los datos: filtra y elimina usuarios incompletos o incorrectos (sin email, sin país, edad inválida).
   - Calcula estadísticas básicas:** media/mediana/desviación estándar de la edad, distribución de género y país.
