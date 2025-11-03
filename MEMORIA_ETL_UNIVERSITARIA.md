@@ -18,19 +18,23 @@ Entre sus principales características destacan:
 
 ### Paginación automática
 
-El sistema descarga los usuarios por lotes de 500 registros por página, calculando automáticamente cuántas páginas son necesarias según el número total solicitado (n):
+La API RandomUser permite solicitar hasta **5000 usuarios en una sola petición**. Para casos que superen este límite, implementamos paginación automática que divide la solicitud en múltiples páginas.
 
-- **100 usuarios** → 1 página
-- **1000 usuarios** → 2 páginas  
-- **3500 usuarios** → 7 páginas
+**Ejemplos de paginación:**
+- **100 usuarios** → 1 petición única (página 1)
+- **1000 usuarios** → 1 petición única (página 1)
+- **5000 usuarios** → 1 petición única (página 1)
+- **10000 usuarios** → 2 peticiones (páginas 1 y 2)
 
 **Código 5.1. Implementación de paginación y seed en extract_users()**
 
 ```python
 def extract_users(self, n: int = 1000, seed: str = None) -> List[User]:
     """Extrae usuarios desde la API RandomUser con paginación y seed."""
+    # La API RandomUser permite hasta 5000 usuarios en una sola petición
+    # Si necesitamos más, dividimos en páginas de 5000
     users = []
-    batch_size = 500
+    batch_size = 5000  # Máximo permitido por la API
     pages = n // batch_size + (1 if n % batch_size else 0)
     
     seed_msg = f" con seed='{seed}'" if seed else ""

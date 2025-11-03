@@ -15,13 +15,13 @@
 ### Results y Paginación
 
 **Paginación automática:**
-- El sistema descarga lotes de 500 usuarios por página
-- Calcula automáticamente cuántas páginas necesita según `n`
-- Ejemplo: 100 usuarios = 1 página, 1000 usuarios = 2 páginas, 3500 usuarios = 7 páginas
+- La API RandomUser permite solicitar hasta **5000 usuarios en una sola petición**
+- Si necesitas más de 5000, se divide automáticamente en múltiples páginas
+- Ejemplo: 100 usuarios = 1 página, 1000 usuarios = 1 página, 10000 usuarios = 2 páginas
 
 **Código de paginación:**
 ```python
-batch_size = 500
+batch_size = 5000  # Máximo permitido por la API
 pages = n // batch_size + (1 if n % batch_size else 0)
 
 for i in range(1, pages + 1):

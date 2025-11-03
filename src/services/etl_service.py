@@ -34,7 +34,7 @@ class ETLService:
         Extrae usuarios desde la API RandomUser con soporte para paginación y seed.
         
         Args:
-            n: Número de usuarios a extraer (por defecto 1000)
+            n: Número de usuarios a extraer (por defecto 1000, máximo 5000)
             seed: Semilla opcional para reproducibilidad. Si se proporciona,
                   la API devolverá siempre los mismos usuarios para ese seed.
                   
@@ -46,8 +46,11 @@ class ETLService:
             - Con seed: Garantiza reproducibilidad - los mismos datos cada vez
             - Ejemplo: seed="abc123" siempre devuelve la misma secuencia de usuarios
         """
+
+        # La API RandomUser permite hasta 5000 usuarios en una sola petición
+        # Si necesitamos más, dividimos en páginas de 5000
         users = []
-        batch_size = 500
+        batch_size = 5000  # Máximo permitido por la API
         pages = n // batch_size + (1 if n % batch_size else 0)
 
         seed_msg = f" con seed='{seed}'" if seed else ""
